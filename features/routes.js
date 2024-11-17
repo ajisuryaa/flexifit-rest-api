@@ -1,11 +1,11 @@
 const globalRouter = require('express').Router();
 const { apiPath } = require('../tools/api_path');
 
-// const attendanceRoute = require('./attendances/route');
-// globalRouter.use(
-//     apiPath(process.env.API_VERSION, attendanceRoute.name), 
-//     attendanceRoute.router
-// );
+const accountRoute = require('./accounts/route');
+globalRouter.use(
+    apiPath(process.env.API_VERSION, accountRoute.name), 
+    accountRoute.router
+);
 
 // const authenticationRoute = require('./authentications/route');
 // globalRouter.use(

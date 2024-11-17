@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 const db = require('../../tools/db');
 const { userTypeEnum } = require('../enums');
 
-const userModel = db.define('accounts', {
+const accountModel = db.define('accounts', {
     uuid: {
         primaryKey: true,
         type: Sequelize.STRING,
@@ -21,7 +21,7 @@ const userModel = db.define('accounts', {
     phone: {
         type: Sequelize.STRING,
         allowNull: false,
-        length: 255
+        length: 13
     },
     password: {
         type: Sequelize.STRING,
@@ -35,6 +35,20 @@ const userModel = db.define('accounts', {
         allowNull: false,
         defaultValue: userTypeEnum.ADMIN
     },
+    created_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: new Date()
+    },
+    updated_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: new Date()
+    },
+    deleted_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+    },
 }, {
     freezeTableName: true,
     createdAt: false,
@@ -42,4 +56,4 @@ const userModel = db.define('accounts', {
     deletedAt: false,
 });
 
-module.exports = userModel;
+module.exports = accountModel;

@@ -12,11 +12,11 @@ const options = {
       }
     },
     apis: [
-      'features/attendances/route.js',
-      'features/authentications/route.js',
-      'features/dashboards/route.js',
-      'features/registrations/route.js',
-      'features/users/route.js',
+      'features/accounts/route.js',
+      // 'features/authentications/route.js',
+      // 'features/dashboards/route.js',
+      // 'features/registrations/route.js',
+      // 'features/users/route.js',
       // 'features/qr_codes/route.js'
     ]
 };

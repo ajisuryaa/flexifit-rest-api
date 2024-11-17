@@ -10,6 +10,7 @@ const db = new Sequelize(
         port: process.env.DB_PORT,
         dialect: process.env.DB_DIALECT,
         logging: false,
+        timezone: process.env.DB_TIMEZONE,
     }
 );
 
