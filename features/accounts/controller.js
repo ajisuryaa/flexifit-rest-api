@@ -91,6 +91,57 @@ class AccountController {
         }
     }
 
+    async changePassword(req, res) {
+        try {
+            let [statusValidate, messageValidate] = this.validateParams(req.body, 'change_password');
+            if (statusValidate == false) {
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate,
+                });
+            }
+
+
+            const account = await accountModel.findOne({
+                where: {
+                    uuid: "655e2bd2-85f0-4436-bcad-de2d282b94fc"
+                }
+            });
+
+            if (!account) {
+                return res.status(200).json({
+                    success: false,
+                    message: "User is not found",
+                });
+            }
+
+            let matchingPassword = await comparePassword(req.body.old_password, account.password);
+            if (!matchingPassword) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Old Password is not match',
+                });
+            }
+
+            let passwordData = {
+                password: await hashPassword(req.body.new_password),
+                updated_at: new Date()
+            }
+            await account.update(passwordData);
+
+            return res.status(200).send({
+                success: true,
+                message: 'Success change password the user',
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+        
+    }
+
 }
 
 const accountController = new AccountController();

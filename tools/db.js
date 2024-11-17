@@ -9,8 +9,12 @@ const db = new Sequelize(
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         dialect: process.env.DB_DIALECT,
+        dialectOptions: {
+            dateStrings: true, // Return date as strings to avoid timezone conversion issues
+            typeCast: true,    // Cast to string if needed
+        },
         logging: false,
-        timezone: process.env.DB_TIMEZONE,
+        timezone: '+07:00', // returning WIB datetime
     }
 );
 
