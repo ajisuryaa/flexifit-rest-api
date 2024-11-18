@@ -2,7 +2,8 @@ const { accountModel } = require('../models');
 const { hashPassword, comparePassword } = require('../../tools/hash');
 const { userTypeEnum } = require('../enums');
 const { v4: uuidv4 } = require('uuid');
-
+// Require the upload middleware
+const upload = require('../../tools/upload_image');
 class AccountController {
     constructor() {
         this.prefix = 'accounts';
@@ -115,7 +116,7 @@ class AccountController {
 
             const account = await accountModel.findOne({
                 where: {
-                    uuid: "655e2bd2-85f0-4436-bcad-de2d282b94fc"
+                    uuid: req.body.id
                 }
             });
 
@@ -154,14 +155,24 @@ class AccountController {
     }
 
     async changeImage(req, res) {
-        console.log(req.headers['content-type']); // Log the Content-Type
-        console.log(req.body);
         try {
             let [statusValidate, messageValidate] = this.validateParams(req, 'upload_image');
             if (statusValidate == false) {
                 return res.status(200).json({
                     success: false,
                     message: messageValidate,
+                });
+            }
+            const account = await accountModel.findOne({
+                where: {
+                    uuid: req.body.id
+                }
+            });
+
+            if (!account) {
+                return res.status(200).json({
+                    success: false,
+                    message: "User is not found",
                 });
             }
             res.status(200).send({
