@@ -9,7 +9,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: true
 }));
 app.use(bodyParser.json());
 app.use(cookieParser())

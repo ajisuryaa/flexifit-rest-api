@@ -54,6 +54,17 @@ class AccountController {
                 return [false, "Parameters new_password cannot be empty."];
             }
         }
+        if (type == 'upload_image') {
+            if (Object.keys(params).length === 0) {
+                return [false, "Parameters id and image be empty."];
+            }
+            if (!params.body.id) {
+                return [false, "Parameters id cannot be empty."];
+            }
+            if (!params.file) {
+                return [false, "Parameters image cannot be empty."];
+            }
+        }
         return [true, ""];
     }
 
@@ -132,6 +143,30 @@ class AccountController {
             return res.status(200).send({
                 success: true,
                 message: 'Success change password the user',
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+        
+    }
+
+    async changeImage(req, res) {
+        console.log(req.headers['content-type']); // Log the Content-Type
+        console.log(req.body);
+        try {
+            let [statusValidate, messageValidate] = this.validateParams(req, 'upload_image');
+            if (statusValidate == false) {
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate,
+                });
+            }
+            res.status(200).send({
+                message: 'File uploaded successfully!',
+                filePath: `/uploads/${req.file.filename}`,
             });
         } catch (error) {
             return res.status(400).json({
