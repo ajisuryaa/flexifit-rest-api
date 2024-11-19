@@ -6,10 +6,8 @@ const uploader = new FileUploader("uploads/", ["image/jpeg", "image/png"], 2 * 1
 
 router.post('/', (req, res) => accountController.createAccount(req, res));
 router.patch('/:id', (req, res) => accountController.changePassword(req, res));
-router.post('/image', uploader.uploadSingle("image", "account"),(req, res) => {
-    accountController.changeImage(req, res)
-});
-
+router.post('/image', uploader.uploadSingle("image"),(req, res) => accountController.changeImage(req, res)
+);
 
 module.exports = {
     "name": accountController.prefix,
