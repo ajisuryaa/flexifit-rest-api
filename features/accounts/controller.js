@@ -4,6 +4,7 @@ const { userTypeEnum } = require('../enums');
 const { v4: uuidv4 } = require('uuid');
 // Require the upload middleware
 const upload = require('../../tools/upload_image');
+const { where } = require('sequelize');
 class AccountController {
     constructor() {
         this.prefix = 'accounts';
@@ -175,6 +176,16 @@ class AccountController {
                     message: "User is not found",
                 });
             }
+
+            let userData = {
+                image: `/uploads/${req.file.filename}`,
+            }
+            await accountModel.update(userData, {
+                where: {
+                    uuid: req.body.id
+                }
+            });
+
             res.status(200).send({
                 message: 'File uploaded successfully!',
                 filePath: `/uploads/${req.file.filename}`,
