@@ -13,6 +13,10 @@ const accountModel = db.define('accounts', {
         allowNull: false,
         length: 255
     },
+    image: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+    },
     name: {
         type: Sequelize.STRING,
         allowNull: false,
