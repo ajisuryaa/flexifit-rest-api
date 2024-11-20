@@ -22,14 +22,14 @@ module.exports ={
                 accessToken,
                 process.env.ACCESS_TOKEN_KEY
             )
-            const blackListedAccessToken = await redis.get(accessToken);
+            //const blackListedAccessToken = await redis.get(accessToken);
 
-            if (blackListedAccessToken == 'true') {
-                return res.status(403).json({
-                    success: false, 
-                    message: "Access token not valid"
-                });
-            }
+            // if (blackListedAccessToken == 'true') {
+            //     return res.status(403).json({
+            //         success: false, 
+            //         message: "Access token not valid"
+            //     });
+            // }
 
             req['uuid'] = accessTokenPayload['uuid'];
             req['level_account'] = accessTokenPayload['level_account'];

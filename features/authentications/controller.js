@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { accountModel } = require('../models');
 const { hashPassword, comparePassword } = require('../../tools/hash');
-const redis = require('../../tools/redis');
 
 class AuthenticationController {
     constructor() {
@@ -81,24 +80,24 @@ class AuthenticationController {
 
     async logout(req, res) {
         try {
-            const accessToken = req.headers.authorization.split(' ').pop();
-            const refreshToken = req.cookies.refresh_token;
+            // const accessToken = req.headers.authorization.split(' ').pop();
+            // const refreshToken = req.cookies.refresh_token;
 
-            const accessTokenPayload = jwt.verify(
-                accessToken,
-                process.env.ACCESS_TOKEN_KEY
-            );
-            const refreshTokenPayload = jwt.verify(
-                refreshToken,
-                process.env.REFRESH_TOKEN_KEY
-            );
-            // Get the current time as a Unix timestamp
-            const currentTime = Math.floor(Date.now() / 1000);
-            const accessTokenLife = accessTokenPayload.exp - currentTime;
-            const refreshTokenLife = refreshTokenPayload.exp - currentTime;
-            // Blacklist the tokens
-            await redis.setEx(accessToken, accessTokenLife, 'true');
-            await redis.setEx(refreshToken, refreshTokenLife, 'true');
+            // const accessTokenPayload = jwt.verify(
+            //     accessToken,
+            //     process.env.ACCESS_TOKEN_KEY
+            // );
+            // const refreshTokenPayload = jwt.verify(
+            //     refreshToken,
+            //     process.env.REFRESH_TOKEN_KEY
+            // );
+            // // Get the current time as a Unix timestamp
+            // const currentTime = Math.floor(Date.now() / 1000);
+            // const accessTokenLife = accessTokenPayload.exp - currentTime;
+            // const refreshTokenLife = refreshTokenPayload.exp - currentTime;
+            // // Blacklist the tokens
+            // await redis.setEx(accessToken, accessTokenLife, 'true');
+            // await redis.setEx(refreshToken, refreshTokenLife, 'true');
 
             res.clearCookie('refresh_token', { httpOnly: true, path: '/' });
 
@@ -126,14 +125,14 @@ class AuthenticationController {
             }
 
             const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
-            const blackListedRefreshToken = await redis.get(refreshToken);
+            //const blackListedRefreshToken = await redis.get(refreshToken);
 
-            if (blackListedRefreshToken == 'true') {
-                return res.status(200).json({
-                    success: false,
-                    message: "Access Denied"
-                });
-            }
+            // if (blackListedRefreshToken == 'true') {
+            //     return res.status(200).json({
+            //         success: false,
+            //         message: "Access Denied"
+            //     });
+            // }
 
             const newAccessToken = jwt.sign(
                 {
