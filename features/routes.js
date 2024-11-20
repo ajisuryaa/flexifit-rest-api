@@ -2,9 +2,16 @@ const globalRouter = require('express').Router();
 const { apiPath } = require('../tools/api_path');
 
 const accountRoute = require('./accounts/route');
+const authRoute = require('./authentications/route');
+
 globalRouter.use(
     apiPath(process.env.API_VERSION, accountRoute.name), 
     accountRoute.router
+);
+
+globalRouter.use(
+    apiPath(process.env.API_VERSION, authRoute.name), 
+    authRoute.router
 );
 
 // const authenticationRoute = require('./authentications/route');
