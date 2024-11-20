@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const db = require('../tools/db');
 
 const accountModel = require('./accounts/model');
+const venueModel = require('./venues/model');
 
 // Relation model
 // Registration relation
@@ -42,5 +43,6 @@ const accountModel = require('./accounts/model');
 
 module.exports = {
     accountModel,
+    venueModel,
     db
 };
