@@ -4,14 +4,15 @@ const db = require('../tools/db');
 
 const accountModel = require('./accounts/model');
 const venueModel = require('./venues/model');
+const membershipModel = require('./memberships/model');
 
 // Relation model
 // Registration relation
-// registrationModel.hasMany(
-//     attendanceModel,
+// membershipModel.hasMany(
+//     venueModel,
 //     {
-//         foreignKey: 'reg_id',
-//         as: 'attendances'
+//         foreignKey: 'uuid',
+//         as: 'venues'
 //     }
 // );
 // registrationModel.belongsTo(userModel, {
@@ -44,5 +45,6 @@ const venueModel = require('./venues/model');
 module.exports = {
     accountModel,
     venueModel,
+    membershipModel,
     db
 };
