@@ -79,24 +79,47 @@ class VenueController {
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
             });
 
-            // Map through the data and reformat the dates
-            // const reformattedVenues = venues.map(venue => ({
-            //     ...venue.toJSON(), // Convert Sequelize object to plain object
-            //     created_at: moment(venue.created_at).format('YYYY-MM-DD HH:mm:s'), // Reformat created_at
-            //     updated_at: moment(venue.updated_at).format('YYYY-MM-DD HH:mm:s'), // Reformat updated_at
-            // }));
+            //Map through the data and reformat the dates
+            const reformattedVenues = venues.map(venue => ({
+                ...venue.toJSON(), // Convert Sequelize object to plain object
+                created_at: moment(venue.created_at).format('YYYY-MM-DD HH:mm:s'), // Reformat created_at
+                updated_at: moment(venue.updated_at).format('YYYY-MM-DD HH:mm:s'), // Reformat updated_at
+            }));
 
             if (venues.length > 0) {
                 return res.status(200).json({
                     success: true,
                     message: 'Succesfully get all venues data.',
-                    data: venues
+                    data: reformattedVenues
                 });
             }
 
             return res.status(200).json({
                 success: true,
                 message: 'Venues data is empty.'
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async getVenue(req, res) {
+        try {
+            const venue = await venueModel.findOne({
+                where: {
+                    uuid: req.params.uuid,
+                    deleted_at: !null
+                },
+                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: 'Succesfully get venue data.',
+                data: venue
             });
         } catch (error) {
             return res.status(400).json({

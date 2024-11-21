@@ -10,7 +10,7 @@ const db = new Sequelize(
         port: process.env.DB_PORT,
         dialect: process.env.DB_DIALECT,
         dialectOptions: {
-            dateStrings: true, // Return date as strings to avoid timezone conversion issues
+            dateStrings: false, // Return date as strings to avoid timezone conversion issues
             typeCast: true,    // Cast to string if needed
         },
         logging: false,
