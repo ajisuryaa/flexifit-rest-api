@@ -35,18 +35,18 @@ class VenueController {
             if (!params.name) {
                 return [false, "Parameters name cannot be empty."];
             }
-            if (!params.email) {
+            if (!params.address) {
                 return [false, "Parameters email cannot be empty."];
             }
-            if (!params.type) {
+            if (!params.contact_number) {
                 return [false, "Parameters type cannot be empty."];
             }
         }
         return [true, ""];
     }
     async createVenue(req, res) {
-        let [statusValidate, messageValidate] = this.validateParams(req.body, "create");
-            console.log(req.body);
+        try{
+            let [statusValidate, messageValidate] = this.validateParams(req.body, "create");
             if (statusValidate == false) {
                 return res.status(200).json({
                     success: false,
@@ -65,9 +65,15 @@ class VenueController {
             await venueModel.create(venueData);
             return res.status(200).json({
                 success: true,
-                message: 'Registration data has been created.',
+                message: 'Add new venue success',
                 data: venueData
             });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
     }
 
     async getAllVenues(req, res) {
@@ -122,6 +128,76 @@ class VenueController {
                 data: venue
             });
         } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async editInformationVenue(req, res) {
+        try{
+            let [statusValidate, messageValidate] = this.validateParams(req.body, "edit");
+            console.log(req.body);
+            if (statusValidate == false) {
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate,
+                });
+            }
+            let venueData = {
+                name: req.body.name,
+                address: req.body.address,
+                contact_number: req.body.contact_number,
+            }
+            await venueModel.update(venueData, {
+                where: {
+                    uuid: req.params.uuid
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Edit venue information success.',
+                data: venueData
+            });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async deleteVenue(req, res) {
+        try{
+            const venue = await venueModel.findOne({
+                where: {
+                    uuid: req.params.uuid,
+                    deleted_at: !null
+                },
+                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'deleted_at'],
+            });
+            if(venue.isEmpty){
+                return res.status(200).json({
+                    success: false,
+                    message: 'Venue not found',
+                });
+            }
+            let venueData = {
+                updated_at: new Date(),
+                deleted_at: new Date(),
+            }
+            await venueModel.update(venueData, {
+                where: {
+                    uuid: req.params.uuid
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Delete venue information success.',
+                data: venueData
+            });
+        } catch (error){
             return res.status(400).json({
                 success: false,
                 message: error.message
