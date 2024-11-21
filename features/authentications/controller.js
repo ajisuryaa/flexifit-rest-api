@@ -8,7 +8,6 @@ class AuthenticationController {
     }
 
     async login(req, res) {
-        console.log(req.body);
         try {
             const user = await accountModel.findOne({
                 where: {
