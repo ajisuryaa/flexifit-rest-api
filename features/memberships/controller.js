@@ -25,20 +25,20 @@ class MembershipController {
                 return [false, "Parameters price cannot be empty."];
             }
         }
-        // if (type == 'edit') {
-        //     if (Object.keys(params).length === 0) {
-        //         return [false, "Parameters name, email and type be empty."];
-        //     }
-        //     if (!params.name) {
-        //         return [false, "Parameters name cannot be empty."];
-        //     }
-        //     if (!params.address) {
-        //         return [false, "Parameters email cannot be empty."];
-        //     }
-        //     if (!params.contact_number) {
-        //         return [false, "Parameters type cannot be empty."];
-        //     }
-        // }
+        if (type == 'edit') {
+            if (Object.keys(params).length === 0) {
+                return [false, "Parameters name, email and type be empty."];
+            }
+            if (!params.name) {
+                return [false, "Parameters name cannot be empty."];
+            }
+            if (!params.description) {
+                return [false, "Parameters description cannot be empty."];
+            }
+            if (typeof params.price !== 'number' || !Number.isFinite(params.price)) {
+                return [false, "Parameters price cannot be empty."];
+            }
+        }
         return [true, ""];
     }
 
@@ -84,97 +84,102 @@ class MembershipController {
         }
     }
 
-    // async getAllMembership(req, res) {
-    //     try {
-    //         const venues = await venueModel.findAll({
-    //             where: {
-    //                 deleted_at: !null
-    //             },
-    //             attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
-    //         });
+    async getListMembership(req, res) {
+        try {
+            const memberships = await membershipModel.findAll({
+                where: {
+                    venue_id: req.params.venue,
+                    deleted_at: !null
+                },
+                attributes: ['id', 'name', 'description', 'price'],
+            });
+            if (memberships.length > 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Succesfully get all memberships data.',
+                    data: memberships
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Memberships data is empty.'
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 
-    //         //Map through the data and reformat the dates
-    //         const reformattedVenues = venues.map(venue => ({
-    //             ...venue.toJSON(), // Convert Sequelize object to plain object
-    //             created_at: moment(venue.created_at).format('YYYY-MM-DD HH:mm:s'), // Reformat created_at
-    //             updated_at: moment(venue.updated_at).format('YYYY-MM-DD HH:mm:s'), // Reformat updated_at
-    //         }));
+    async deleteMembership(req, res) {
+        try{
+            const membership = await membershipModel.findOne({
+                where: {
+                    id: req.params.id,
+                    deleted_at: !null
+                },
+                attributes: ['id', 'name', 'description', 'price'],
+            });
+            if(membership.isEmpty){
+                return res.status(200).json({
+                    success: false,
+                    message: 'Membership not found',
+                });
+            }
+            let membershipData = {
+                updated_at: new Date(),
+                deleted_at: new Date(),
+            }
+            await membershipModel.update(membershipData, {
+                where: {
+                    id: req.params.id
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Delete membership success.',
+                data: membershipData
+            });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 
-    //         if (venues.length > 0) {
-    //             return res.status(200).json({
-    //                 success: true,
-    //                 message: 'Succesfully get all venues data.',
-    //                 data: reformattedVenues
-    //             });
-    //         }
-
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: 'Venues data is empty.'
-    //         });
-    //     } catch (error) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             message: error.message
-    //         });
-    //     }
-    // }
-
-    // async getVenue(req, res) {
-    //     try {
-    //         const venue = await venueModel.findOne({
-    //             where: {
-    //                 uuid: req.params.uuid,
-    //                 deleted_at: !null
-    //             },
-    //             attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
-    //         });
-
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: 'Succesfully get venue data.',
-    //             data: venue
-    //         });
-    //     } catch (error) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             message: error.message
-    //         });
-    //     }
-    // }
-
-    // async editInformationVenue(req, res) {
-    //     try{
-    //         let [statusValidate, messageValidate] = this.validateParams(req.body, "edit");
-    //         console.log(req.body);
-    //         if (statusValidate == false) {
-    //             return res.status(200).json({
-    //                 success: false,
-    //                 message: messageValidate,
-    //             });
-    //         }
-    //         let venueData = {
-    //             name: req.body.name,
-    //             address: req.body.address,
-    //             contact_number: req.body.contact_number,
-    //         }
-    //         await venueModel.update(venueData, {
-    //             where: {
-    //                 uuid: req.params.uuid
-    //             }
-    //         });
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: 'Edit venue information success.',
-    //             data: venueData
-    //         });
-    //     } catch (error){
-    //         return res.status(400).json({
-    //             success: false,
-    //             message: error.message
-    //         });
-    //     }
-    // }
+    async editInformationMembership(req, res) {
+        try{
+            let [statusValidate, messageValidate] = this.validateParams(req.body, "edit");
+            if (statusValidate == false) {
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate,
+                });
+            }
+            let membershipData = {
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price
+            }
+            await membershipModel.update(membershipData, {
+                where: {
+                    id: req.params.id
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Edit membership information success.',
+                data: membershipData
+            });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 
     // async deleteVenue(req, res) {
     //     try{
