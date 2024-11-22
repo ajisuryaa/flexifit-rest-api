@@ -1,6 +1,7 @@
-const { venueModel } = require('../models');
+const { venueModel, membershipModel } = require('../models');
 const { v4: uuidv4 } = require('uuid');
 const moment = require('moment'); 
+const { membershipAttributes, venueAttributes } = require('../list');
 
 class VenueController {
     constructor() {
@@ -120,8 +121,14 @@ class VenueController {
                     deleted_at: !null
                 },
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
+                include: [
+                    {
+                        model: membershipModel,
+                        as: 'memberships',
+                        attributes: membershipAttributes,
+                    },
+                ],
             });
-
             return res.status(200).json({
                 success: true,
                 message: 'Succesfully get venue data.',

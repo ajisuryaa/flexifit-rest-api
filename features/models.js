@@ -6,6 +6,20 @@ const accountModel = require('./accounts/model');
 const venueModel = require('./venues/model');
 const membershipModel = require('./memberships/model');
 
+venueModel.hasMany(
+    membershipModel,
+    {
+        foreignKey: 'venue_id',
+        as: 'memberships'
+    }
+);
+
+membershipModel.belongsTo(venueModel, {
+    foreignKey: 'venue_id',
+    targetKey: 'uuid',
+    as: 'venue'
+});
+
 // Relation model
 // Registration relation
 // membershipModel.hasMany(
