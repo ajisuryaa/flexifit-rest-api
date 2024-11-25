@@ -5,24 +5,17 @@ class VenueAccountController {
         this.prefix = 'venue_accounts';
     }
 
-    async createAccountVenue(req, res) {
+    async createAccountVenue(data) {
         try{
             let accountData = {
-                id_account: uuid,
-                id_venue: req.body.name,
-                level_account: req.body.address
+                id_account: data.uuid,
+                id_venue: data.name,
+                level_account: data.address
             }
             await venueAccountModel.create(accountData);
-            return res.status(200).json({
-                success: true,
-                message: 'Add new venue success',
-                data: venueData
-            });
+            return ["true", "create account success"];
         } catch (error){
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
+            return ["false", error.message];
         }
     }
 }

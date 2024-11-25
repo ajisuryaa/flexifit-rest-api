@@ -2,9 +2,7 @@ const { accountModel } = require('../models');
 const { hashPassword, comparePassword } = require('../../tools/hash');
 const { userTypeEnum } = require('../enums');
 const { v4: uuidv4 } = require('uuid');
-// Require the upload middleware
-const upload = require('../../tools/upload_image');
-const { where } = require('sequelize');
+const venueAccountController = require('../venue_accounts/controller');
 class AccountController {
     constructor() {
         this.prefix = 'accounts';
@@ -25,10 +23,18 @@ class AccountController {
                 return [false, "Parameters email cannot be empty."];
             }
             if (!params.level_account) {
-                return [false, "Parameters type cannot be empty."];
+                return [false, "Parameters type account cannot be empty."];
             }
             if (!params.phone) {
                 return [false, "Parameters phone cannot be empty."];
+            }
+            if(params.level_account == userTypeEnum.ADMINVENUE){
+                if (!params.venue_id) {
+                    return [false, "Parameters venue id cannot be empty."];
+                }
+                if (!params.venue_level_account) {
+                    return [false, "Parameters level account cannot be empty."];
+                }
             }
         }
         if (type == 'edit') {
@@ -80,17 +86,32 @@ class AccountController {
                 });
             }
             let codeFormat = uuidv4();
-            let userData = {
-                uuid: codeFormat,
-                email: req.body.email,
-                name: req.body.name,
-                password: await hashPassword(req.body.password),
-                phone: req.body.phone,
-                level_account: req.body.level_account
-            }
-            accountModel.create(userData);
             if(req.body.level_account == userTypeEnum.ADMINVENUE){
-                
+                let userData = {
+                    uuid: codeFormat,
+                    email: req.body.email,
+                    name: req.body.name,
+                    password: await hashPassword(req.body.password),
+                    phone: req.body.phone,
+                    level_account: req.body.level_account
+                }
+                let venueAccountData = {
+                    id_account: "",
+                    id_venue: "",
+                    level_account: ""
+                }
+                accountModel.create(userData);
+                venueAccountController.createAccountVenue(venueAccountData);
+            } else{
+                let userData = {
+                    uuid: codeFormat,
+                    email: req.body.email,
+                    name: req.body.name,
+                    password: await hashPassword(req.body.password),
+                    phone: req.body.phone,
+                    level_account: req.body.level_account
+                }
+                accountModel.create(userData);
             }
             return res.status(200).send({
                 success: true,
