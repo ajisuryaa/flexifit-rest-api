@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
-const { accountModel } = require('../models');
+const { accountModel, venueAccountModel } = require('../models');
 const { hashPassword, comparePassword } = require('../../tools/hash');
-
+const { levelAttributes } = require('../list');
+const { userTypeEnum } = require('../enums')
 class AuthenticationController {
     constructor() {
         this.prefix = 'auth';
@@ -34,8 +35,8 @@ class AuthenticationController {
                 {
                     'name': user.name,
                     'email': user.email,
-                    'user_id': user.id,
-                    'user_type': user.type
+                    'user_id': user.uuid,
+                    'user_type': user.level_account
                 },
                 process.env.ACCESS_TOKEN_KEY,
                 { expiresIn: '15m', }
@@ -44,8 +45,8 @@ class AuthenticationController {
                 {
                     'name': user.name,
                     'email': user.email,
-                    'user_id': user.id,
-                    'user_type': user.type
+                    'user_id': user.uuid,
+                    'user_type': user.level_account
                 },
                 process.env.REFRESH_TOKEN_KEY,
                 { expiresIn: '1d', }
@@ -55,12 +56,30 @@ class AuthenticationController {
                 maxAge: 24 * 60 * 60 * 1000
             });
 
-            const dataUser = await accountModel.findOne({
-                where: {
-                    email: req.body.email,
-                },
-                attributes: ['uuid', 'email', 'image', 'name', 'phone', 'level_account']
-            });
+            var dataUser;
+            if(user.level_account == userTypeEnum.ADMINVENUE){
+                dataUser = await accountModel.findOne({
+                    where: {
+                        email: req.body.email,
+                    },
+                    attributes: ['uuid', 'email', 'image', 'name', 'phone', 'level_account'],
+                    include: [
+                        {
+                            model: venueAccountModel,
+                            required: false, // Makes the inclusion optional
+                            as: 'venue_account',
+                            attributes: levelAttributes,
+                        },
+                    ],
+                });
+            } else{
+                dataUser = await accountModel.findOne({
+                    where: {
+                        email: req.body.email,
+                    },
+                    attributes: ['uuid', 'email', 'image', 'name', 'phone', 'level_account'],
+                });
+            }
 
             return res.status(200).json({
                 success: true,

@@ -88,9 +88,10 @@ class AccountController {
                 phone: req.body.phone,
                 level_account: req.body.level_account
             }
-            
             accountModel.create(userData);
-
+            if(req.body.level_account == userTypeEnum.ADMINVENUE){
+                
+            }
             return res.status(200).send({
                 success: true,
                 message: 'Success create the user',
