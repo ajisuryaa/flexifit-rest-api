@@ -1,10 +1,10 @@
 // Global models purpose
-const Sequelize = require('sequelize');
 const db = require('../tools/db');
 
 const accountModel = require('./accounts/model');
 const venueModel = require('./venues/model');
 const membershipModel = require('./memberships/model');
+const venueAccountModel = require('./venue_accounts/model');
 
 venueModel.hasMany(
     membershipModel,
@@ -18,6 +18,12 @@ membershipModel.belongsTo(venueModel, {
     foreignKey: 'venue_id',
     targetKey: 'uuid',
     as: 'venue'
+});
+
+accountModel.belongsTo(venueAccountModel, {
+    foreignKey: 'uuid',
+    targetKey: 'id_account',
+    as: 'venue_account',
 });
 
 // Relation model
@@ -60,5 +66,6 @@ module.exports = {
     accountModel,
     venueModel,
     membershipModel,
+    venueAccountModel,
     db
 };
