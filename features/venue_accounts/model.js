@@ -2,6 +2,12 @@ var Sequelize = require('sequelize');
 const db = require('../../tools/db');
 
 const venueAccountModel = db.define('venue_accounts', {
+    id: {
+        type: Sequelize.INTEGER,  // Specifies the type as integer
+        primaryKey: true,         // Marks this as the primary key
+        autoIncrement: true,      // Enables auto-incrementing
+        allowNull: false,         // Ensures the column is not nullable
+    },
     id_account: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -23,5 +29,4 @@ const venueAccountModel = db.define('venue_accounts', {
     updatedAt: false,
     deletedAt: false,
 });
-venueAccountModel.removeAttribute('id');
 module.exports = venueAccountModel;

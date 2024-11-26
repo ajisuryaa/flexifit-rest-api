@@ -86,24 +86,25 @@ class AccountController {
                 });
             }
             let codeFormat = uuidv4();
-            if(req.body.level_account == userTypeEnum.ADMINVENUE){
-                let userData = {
+            let userData;
+            if(req.body.type == userTypeEnum.ADMINVENUE){
+                userData = {
                     uuid: codeFormat,
                     email: req.body.email,
                     name: req.body.name,
                     password: await hashPassword(req.body.password),
                     phone: req.body.phone,
-                    level_account: req.body.level_account
+                    level_account: req.body.type
                 }
                 let venueAccountData = {
-                    id_account: "",
-                    id_venue: "",
-                    level_account: ""
+                    id_account: codeFormat,
+                    id_venue: req.body.venue,
+                    level_account: req.body.level_account
                 }
                 accountModel.create(userData);
-                venueAccountController.createAccountVenue(venueAccountData);
+                await venueAccountController.createAccountVenue(venueAccountData);
             } else{
-                let userData = {
+                userData = {
                     uuid: codeFormat,
                     email: req.body.email,
                     name: req.body.name,
