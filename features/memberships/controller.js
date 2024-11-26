@@ -114,14 +114,15 @@ class MembershipController {
 
     async deleteMembership(req, res) {
         try{
-            const membership = await membershipModel.findOne({
+            const memberships = await membershipModel.findOne({
                 where: {
                     id: req.params.id,
                     deleted_at: !null
                 },
                 attributes: ['id', 'name', 'description', 'price'],
             });
-            if(membership.isEmpty){
+            console.log(memberships);
+            if(memberships == null){
                 return res.status(200).json({
                     success: false,
                     message: 'Membership not found',
