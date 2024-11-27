@@ -5,6 +5,7 @@ const accountModel = require('./accounts/model');
 const venueModel = require('./venues/model');
 const membershipModel = require('./memberships/model');
 const venueAccountModel = require('./venue_accounts/model');
+const transactionModel = require('./transactions/model');
 
 venueModel.hasMany(
     membershipModel,
@@ -67,5 +68,6 @@ module.exports = {
     venueModel,
     membershipModel,
     venueAccountModel,
+    transactionModel,
     db
 };

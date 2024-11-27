@@ -5,6 +5,7 @@ const accountRoute = require('./accounts/route');
 const authRoute = require('./authentications/route');
 const venueRoute = require('./venues/route');
 const membershipRoute = require('./memberships/route');
+const transactionRoute = require('./transactions/route');
 
 globalRouter.use(
     apiPath(process.env.API_VERSION, accountRoute.name), 
@@ -24,6 +25,11 @@ globalRouter.use(
 globalRouter.use(
     apiPath(process.env.API_VERSION, membershipRoute.name), 
     membershipRoute.router
+);
+
+globalRouter.use(
+    apiPath(process.env.API_VERSION, transactionRoute.name), 
+    transactionRoute.router
 );
 
 // const authenticationRoute = require('./authentications/route');
