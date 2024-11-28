@@ -28,45 +28,31 @@ class TransactionController {
                 },
                 attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
             });
-            if (!transactions) {
-                return [false, null];
+            // if still have id transaction in status picking, return id transaction
+            if (transactions) {
+                return [true, transactions.id_transaction];
             }
-            return [true, transactions.id_transaction];
+            // if dont have any id transaction, create new id transaction
+            return await this.createTransaction(id_account);
         } catch (error) {
             return [false, error.message];
         }
     }
     
-    async createTransaction(req, res) {
+    async createTransaction(id_account) {
         try{
-            let [status, id_transaction] = await this.findAvailableTransaction(req.body.account);
-            console.log(status, id_transaction);
-            if(status){
-                return res.status(200).json({
-                    success: true,
-                    message: "Can't create new transaction, you still have picking transaction",
-                });
-            } else{
-                let transactionId = this.generateTransactionID();
-                let transactionData = {
-                    id_transaction: transactionId,
-                    id_account: req.body.account,
-                    status: "picking",
-                    payment_approval: null,
-                    coupon_id: req.body.coupon
-                }
-                await transactionModel.create(transactionData);
-                return res.status(200).json({
-                    success: true,
-                    message: 'Create transaction success',
-                    data: transactionData
-                });
+            let transactionId = this.generateTransactionID();
+            let transactionData = {
+                id_transaction: transactionId,
+                id_account: id_account,
+                status: "picking",
+                payment_approval: null,
+                coupon_id: null
             }
+            await transactionModel.create(transactionData);
+            return [true, transactionId];
         } catch (error){
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
+            return [false, error.message];
         }
     }
 

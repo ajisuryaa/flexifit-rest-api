@@ -14,7 +14,13 @@ const statusTransactionEnum = {
     COMPLETED: 'completed',
 }
 
+const cartItemTypeEnum = {
+    MEMBERSHIP_CARD: 'membership',
+    ITEM: 'item'
+}
+
 module.exports = {
     userTypeEnum,
-    statusTransactionEnum
+    statusTransactionEnum,
+    cartItemTypeEnum
 }
