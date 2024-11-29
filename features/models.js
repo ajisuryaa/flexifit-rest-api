@@ -39,8 +39,26 @@ transactionModel.hasMany(
 cartModel.belongsTo(transactionModel, {
     foreignKey: 'id_transaction',
     targetKey: 'id_transaction',
-    as: 'transaction',
 });
+
+cartModel.belongsTo(
+    membershipModel,
+    {
+        foreignKey: 'id_item',
+        as: 'product_info'
+    }
+);
+
+membershipModel.hasMany(cartModel, {
+    foreignKey: 'id',
+    as: 'item'
+});
+
+// membershipModel.belongsTo(cartModel, {
+//     foreignKey: 'id',
+//     targetKey: 'id_item',
+//     as: 'carts_list',
+// });
 
 // Relation model
 // Registration relation
