@@ -1,6 +1,7 @@
 const { transactionModel, cartModel, membershipModel } = require('../models');
 const { cartAttributes, membershipAttributes } = require('../list');
 const crypto = require('crypto');
+const { where } = require('sequelize');
 
 class TransactionController {
     constructor() {
@@ -142,6 +143,47 @@ class TransactionController {
         }
     }
 
+    // get customer transaction
+    async getVenueOrder(req, res) {
+        try {
+            const transactions = await transactionModel.findAll({
+                attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
+                include: [
+                    {
+                        model: cartModel,
+                        as: 'list_items',
+                        attributes: ['quantity', 'price', 'total_price', 'type'],
+                        include: [
+                            {
+                                model: membershipModel,
+                                as: 'product_info',
+                                attributes: membershipAttributes,
+                                where:  {
+                                    venue_id: req.params.venue,
+                                }
+                            },
+                        ],
+                    },
+                ],
+            });
+            if (transactions.length > 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Succesfully get latest cart.',
+                    data: transactions
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'No transaction history.'
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
     
 }
 
