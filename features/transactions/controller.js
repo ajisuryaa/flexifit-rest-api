@@ -1,5 +1,5 @@
-const { transactionModel } = require('../models');
-const { v4: uuidv4 } = require('uuid');
+const { transactionModel, cartModel, membershipModel } = require('../models');
+const { cartAttributes, membershipAttributes } = require('../list');
 const crypto = require('crypto');
 
 class TransactionController {
@@ -69,6 +69,64 @@ class TransactionController {
                 return res.status(200).json({
                     success: true,
                     message: 'Succesfully get all transaction data.',
+                    data: transactions
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'No transaction history.'
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    // get customer transaction
+    async getCustomerTransaction(req, res) {
+        try {
+            let status = 'all';
+            if(req.header.status != null){
+                status = req.header.status;
+            }
+
+            let query = {};
+            if(status == 'all'){
+                query = {
+                    id_account: req.params.account,
+                    deleted_at: !null
+                };
+            } else{
+                query = {
+                    id_account: req.params.account,
+                    status: req.header.status,
+                    deleted_at: !null
+                };
+            }
+            const transactions = await transactionModel.findAll({
+                where: query,
+                attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
+                include: [
+                    {
+                        model: cartModel,
+                        as: 'list_items',
+                        attributes: cartAttributes,
+                        include: [
+                            {
+                                model: membershipModel,
+                                as: 'product_info',
+                                attributes: membershipAttributes,
+                            },
+                        ],
+                    },
+                ],
+            });
+            if (transactions.length > 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Succesfully get latest cart.',
                     data: transactions
                 });
             }
