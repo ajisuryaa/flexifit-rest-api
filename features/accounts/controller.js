@@ -127,6 +127,57 @@ class AccountController {
         }
     }
 
+    async registerAccount(req, res) {
+        try {
+        let [statusValidate, messageValidate] = this.validateParams(req.body, 'create');
+            if (statusValidate == false) {
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate,
+                });
+            }
+            let codeFormat = uuidv4();
+            let userData;
+            if(req.body.type == userTypeEnum.ADMINVENUE){
+                userData = {
+                    uuid: codeFormat,
+                    email: req.body.email,
+                    name: req.body.name,
+                    password: await hashPassword(req.body.password),
+                    phone: req.body.phone,
+                    level_account: req.body.type
+                }
+                let venueAccountData = {
+                    id_account: codeFormat,
+                    id_venue: req.body.venue,
+                    level_account: req.body.level_account
+                }
+                accountModel.create(userData);
+                await venueAccountController.createAccountVenue(venueAccountData);
+            } else{
+                userData = {
+                    uuid: codeFormat,
+                    email: req.body.email,
+                    name: req.body.name,
+                    password: await hashPassword(req.body.password),
+                    phone: req.body.phone,
+                    level_account: req.body.level_account
+                }
+                accountModel.create(userData);
+            }
+            return res.status(200).send({
+                success: true,
+                message: 'Success create the user',
+                data: userData
+            });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
     async changePassword(req, res) {
         try {
             let [statusValidate, messageValidate] = this.validateParams(req.body, 'change_password');

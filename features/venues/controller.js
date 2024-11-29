@@ -1,6 +1,5 @@
 const { venueModel, membershipModel } = require('../models');
 const { v4: uuidv4 } = require('uuid');
-const moment = require('moment'); 
 const { membershipAttributes, venueAttributes } = require('../list');
 
 class VenueController {
@@ -86,18 +85,11 @@ class VenueController {
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
             });
 
-            //Map through the data and reformat the dates
-            const reformattedVenues = venues.map(venue => ({
-                ...venue.toJSON(), // Convert Sequelize object to plain object
-                created_at: moment(venue.created_at).format('YYYY-MM-DD HH:mm:s'), // Reformat created_at
-                updated_at: moment(venue.updated_at).format('YYYY-MM-DD HH:mm:s'), // Reformat updated_at
-            }));
-
             if (venues.length > 0) {
                 return res.status(200).json({
                     success: true,
                     message: 'Succesfully get all venues data.',
-                    data: reformattedVenues
+                    data: venues
                 });
             }
 
