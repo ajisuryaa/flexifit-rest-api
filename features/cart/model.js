@@ -23,6 +23,11 @@ const cartModel = db.define('cart', {
         allowNull: false,
         length: 11
     },
+    total_price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        length: 11
+    },
     type: {
         type: Sequelize.ENUM(
             cartItemTypeEnum.values
