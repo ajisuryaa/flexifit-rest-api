@@ -13,7 +13,7 @@ const db = new Sequelize(
             dateStrings: false, // Return date as strings to avoid timezone conversion issues
             typeCast: true,    // Cast to string if needed
         },
-        logging: false,
+        logging: console.log, // Logs generated SQL queries
         timezone: '+07:00', // returning WIB datetime
     }
 );

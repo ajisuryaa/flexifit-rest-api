@@ -32,23 +32,15 @@ transactionModel.hasMany(
     cartModel,
     {
         foreignKey: 'id_transaction',
-        as: 'list_items'
+        targetKey: 'id_transaction',
+        as: 'carts'
     }
 );
 
 cartModel.belongsTo(transactionModel, {
     foreignKey: 'id_transaction',
     targetKey: 'id_transaction',
-});
-
-transactionModel.belongsTo(cartModel, {
-    foreignKey: 'id_transaction',
-    targetKey: 'id_transaction'
-});
-
-cartModel.belongsTo(transactionModel, {
-    foreignKey: 'id_transaction',
-    targetKey: 'id_transaction'
+    as: 'transaction'
 });
 
 cartModel.belongsTo(

@@ -2,6 +2,7 @@ const { transactionModel, cartModel, membershipModel } = require('../models');
 const { cartAttributes, membershipAttributes } = require('../list');
 const crypto = require('crypto');
 const { where } = require('sequelize');
+const { stat } = require('fs');
 
 class TransactionController {
     constructor() {
@@ -89,10 +90,10 @@ class TransactionController {
     async getCustomerTransaction(req, res) {
         try {
             let status = 'all';
-            if(req.header.status != null){
-                status = req.header.status;
+            if(req.headers.status != null){
+                status = req.headers.status;
             }
-
+            console.log(req.headers.status);
             let query = {};
             if(status == 'all'){
                 query = {
@@ -102,27 +103,29 @@ class TransactionController {
             } else{
                 query = {
                     id_account: req.params.account,
-                    status: req.header.status,
+                    status: req.headers.status,
                     deleted_at: !null
                 };
             }
+            console.log(query);
             const transactions = await transactionModel.findAll({
                 where: query,
                 attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
                 include: [
                     {
-                        model: cartModel,
-                        as: 'list_items',
-                        attributes: cartAttributes,
+                        model: cartModel,// Specify cart fields to return
+                        as: 'carts', // Specify the alias defined in the association
+                        attributes: ['id_item', 'quantity', 'price', 'total_price'],
                         include: [
-                            {
+                           { 
                                 model: membershipModel,
-                                as: 'product_info',
-                                attributes: membershipAttributes,
-                            },
-                        ],
+                                as: 'product_info'
+                            }
+                        ]
                     },
-                ],
+                  ],
+                  distinct: true, // Prevent row collapsing,
+                  subQuery: false, // Prevent subquery optimization
             });
             if (transactions.length > 0) {
                 return res.status(200).json({
@@ -151,7 +154,7 @@ class TransactionController {
                 include: [
                     {
                         model: cartModel,
-                        as: 'list_items',
+                        as: 'items',
                         attributes: ['quantity', 'price', 'total_price', 'type'],
                         include: [
                             {
