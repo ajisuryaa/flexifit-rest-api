@@ -1,5 +1,6 @@
 const { transactionModel, cartModel, membershipModel } = require('../models');
 const { cartAttributes, membershipAttributes } = require('../list');
+const FileUploader = require('../uploder_file');
 const crypto = require('crypto');
 const { where } = require('sequelize');
 const { stat } = require('fs');
@@ -182,6 +183,67 @@ class TransactionController {
                 message: 'No transaction history.'
             });
         } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    statusTransactionList = ['picking', 'waiting approval', 'approval valid', 'on delivery', 'completed']; 
+
+    getNextStatus(currentStatus) {
+        const currentIndex = this.statusTransactionList.indexOf(currentStatus);
+        if (currentIndex === -1) {
+            throw new Error('Invalid status: The provided status is not in the list.');
+        }
+        
+        // Return the next status if it exists, otherwise null
+        return this.statusTransactionList[currentIndex + 1] || null;
+    }
+
+    async checkoutTransaction(req,res){
+        try{
+            let checkoutData = {
+                coupon_id: req.body.coupon,
+                status: this.getNextStatus(req.body.status),
+                updated_at: new Date()
+            }
+            await transactionModel.update(checkoutData, {
+                where: {
+                    id_transaction : req.params.transaction
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Success Checkout Transaction',
+                data: checkoutData
+            });
+        } catch (error){
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async updateStatusTransaction(req,res){
+        try{
+            let statusData = {
+                status: "completed",
+                updated_at: new Date()
+            }
+            await transactionModel.update(statusData, {
+                where: {
+                    id_transaction : req.params.transaction
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                message: 'Success update status',
+                data: statusData
+            });
+        } catch (error){
             return res.status(400).json({
                 success: false,
                 message: error.message
