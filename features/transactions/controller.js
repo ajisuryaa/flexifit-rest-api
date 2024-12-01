@@ -122,6 +122,7 @@ class TransactionController {
                                 as: 'product_info'
                             }
                         ]
+                        
                     },
                   ],
                   distinct: true, // Prevent row collapsing,
@@ -154,7 +155,7 @@ class TransactionController {
                 include: [
                     {
                         model: cartModel,
-                        as: 'items',
+                        as: 'carts',
                         attributes: ['quantity', 'price', 'total_price', 'type'],
                         include: [
                             {

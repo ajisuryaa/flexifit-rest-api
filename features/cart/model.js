@@ -3,6 +3,11 @@ const db = require('../../tools/db');
 const { cartItemTypeEnum } = require('../enums');
 
 const cartModel = db.define('cart', {
+    id : {
+        primaryKey: true,
+        type: Sequelize.STRING,
+        length: 255
+    },
     id_transaction  : {
         primaryKey: true,
         type: Sequelize.STRING,
