@@ -281,6 +281,34 @@ class AccountController {
         
     }
 
+    // Show All User
+    async getAllUser(req, res) {
+        try {
+            const accounts = await accountModel.findAll({
+                where: {
+                    deleted_at: !null
+                },
+                attributes: ['uuid', 'email', 'image', 'name', 'phone', 'password', 'level_account', 'created_at', 'updated_at', 'deleted_at'],
+            });
+            if (accounts.length > 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Succesfully get all account data.',
+                    data: accounts
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'No account found.'
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
 }
 
 const accountController = new AccountController();
