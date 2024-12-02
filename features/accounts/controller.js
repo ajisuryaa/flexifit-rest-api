@@ -3,6 +3,8 @@ const { hashPassword, comparePassword } = require('../../tools/hash');
 const { userTypeEnum } = require('../enums');
 const { v4: uuidv4 } = require('uuid');
 const venueAccountController = require('../venue_accounts/controller');
+const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 
 class AccountController {
@@ -241,6 +243,12 @@ class AccountController {
         try {
             let [statusValidate, messageValidate] = this.validateParams(req, 'upload_image');
             if (statusValidate == false) {
+                // Remove the uploaded file if no id is provided
+                
+                console.log(req.file);
+                if (req.file) {
+                    fs.unlinkSync(req.file.path);
+                }
                 return res.status(200).json({
                     success: false,
                     message: messageValidate,
@@ -253,6 +261,9 @@ class AccountController {
             });
 
             if (!account) {
+                if (req.file) {
+                    fs.unlinkSync(req.file.path);
+                }
                 return res.status(200).json({
                     success: false,
                     message: "User is not found",
