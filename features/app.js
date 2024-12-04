@@ -11,6 +11,9 @@ app.use(cors({
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+// Optional: Serve all static files in the "uploads" directory
+app.use('/static', express.static('uploads'));
 app.use(bodyParser.json());
 app.use(cookieParser())
 
