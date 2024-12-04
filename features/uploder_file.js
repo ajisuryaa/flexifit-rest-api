@@ -2,45 +2,37 @@ const fs = require('fs');
 const path = require('path');
 
 class FileUploader {
-  constructor(uploadDir = 'uploads') {
+  constructor(uploadDir = 'uploads', allowedFormats = ['jpeg', 'jpg', 'png']) {
     this.uploadDir = path.resolve(uploadDir);
+    this.allowedFormats = allowedFormats;
 
-    // Ensure the upload directory exists
+    // Ensure upload directory exists
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
     }
   }
 
   /**
-   * Parse raw multipart form-data request
-   * @param {string} rawData - The raw request data
-   * @param {string} boundary - The boundary string for parsing
-   * @returns {Object} - File information and content
+   * Validates file format based on allowed formats
+   * @param {string} fileName - The name of the file
+   * @returns {boolean}
    */
-  parseMultipart(rawData, boundary) {
-    const parts = rawData.split(`--${boundary}`);
-    for (const part of parts) {
-      if (part.includes('Content-Disposition: form-data;')) {
-        const filenameMatch = part.match(/filename="(.+?)"/);
-        if (filenameMatch) {
-          const filename = filenameMatch[1];
-          const fileContent = part.split('\r\n\r\n')[1].split('\r\n--')[0];
-          return { filename, content: fileContent };
-        }
-      }
-    }
-    throw new Error('No valid file part found in the request');
+  isValidFormat(fileName) {
+    const extension = path.extname(fileName).toLowerCase().replace('.', '');
+    return this.allowedFormats.includes(extension);
   }
 
   /**
-   * Save file to disk
-   * @param {string} filename - Name of the file
-   * @param {Buffer|string} content - File content
-   * @returns {string} - File path
+   * Saves the uploaded file to the disk
+   * @param {string} fileName - The original file name
+   * @param {Buffer} fileBuffer - The file content as a Buffer
+   * @returns {string} - The file path where the file is saved
    */
-  saveFile(filename, content) {
-    const filePath = path.join(this.uploadDir, filename);
-    fs.writeFileSync(filePath, content, 'binary');
+  saveFile(fileName, fileBuffer) {
+    const uniqueName = `${Date.now()}-${fileName}`;
+    const filePath = path.join(this.uploadDir, uniqueName);
+
+    fs.writeFileSync(filePath, fileBuffer);
     return filePath;
   }
 }
