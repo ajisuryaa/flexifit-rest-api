@@ -27,7 +27,7 @@ class TransactionController {
                 where: {
                     status: "picking",
                     id_account: id_account, 
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
             });
@@ -64,7 +64,7 @@ class TransactionController {
         try {
             const transactions = await transactionModel.findAll({
                 where: {
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['id_transaction', 'id_account', 'status', 'payment_approval', 'coupon_id', 'created_at', 'updated_at'],
             });
@@ -99,13 +99,13 @@ class TransactionController {
             if(status == 'all'){
                 query = {
                     id_account: req.params.account,
-                    deleted_at: !null
+                    deleted_at: null
                 };
             } else{
                 query = {
                     id_account: req.params.account,
                     status: req.headers.status,
-                    deleted_at: !null
+                    deleted_at: null
                 };
             }
             console.log(query);

@@ -89,7 +89,7 @@ class MembershipController {
             const memberships = await membershipModel.findAll({
                 where: {
                     venue_id: req.params.venue,
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['id', 'name', 'description', 'price'],
             });
@@ -117,7 +117,7 @@ class MembershipController {
             const memberships = await membershipModel.findOne({
                 where: {
                     id: req.params.id,
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['id', 'name', 'description', 'price'],
             });

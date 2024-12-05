@@ -110,7 +110,7 @@ class VenueController {
             const venue = await venueModel.findOne({
                 where: {
                     uuid: req.params.uuid,
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
                 include: [
@@ -172,7 +172,7 @@ class VenueController {
             const venue = await venueModel.findOne({
                 where: {
                     uuid: req.params.uuid,
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'deleted_at'],
             });

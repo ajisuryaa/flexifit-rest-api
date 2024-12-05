@@ -297,7 +297,7 @@ class AccountController {
         try {
             const accounts = await accountModel.findAll({
                 where: {
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['uuid', 'email', 'image', 'name', 'phone', 'password', 'level_account', 'created_at', 'updated_at', 'deleted_at'],
             });
