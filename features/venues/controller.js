@@ -82,7 +82,7 @@ class VenueController {
                 where: {
                     deleted_at: !null
                 },
-                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
+                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude'],
             });
 
             if (venues.length > 0) {
@@ -92,7 +92,6 @@ class VenueController {
                     data: venues
                 });
             }
-
             return res.status(200).json({
                 success: true,
                 message: 'Venues data is empty.'
