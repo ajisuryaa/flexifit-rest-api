@@ -33,7 +33,7 @@ class AccountController {
             if (!params.email) {
                 return [false, "Parameters email cannot be empty."];
             }
-            if (!params.level_account) {
+            if (!params.type) {
                 return [false, "Parameters type account cannot be empty."];
             }
             if (!params.phone) {
@@ -138,7 +138,7 @@ class AccountController {
                     name: req.body.name,
                     password: await hashPassword(req.body.password),
                     phone: req.body.phone,
-                    level_account: req.body.level_account
+                    level_account: req.body.type
                 }
                 accountModel.create(userData);
             }
