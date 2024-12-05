@@ -80,7 +80,7 @@ class VenueController {
         try {
             const venues = await venueModel.findAll({
                 where: {
-                    deleted_at: !null
+                    deleted_at: null
                 },
                 attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude'],
             });
