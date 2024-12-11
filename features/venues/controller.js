@@ -82,7 +82,7 @@ class VenueController {
                 where: {
                     deleted_at: null
                 },
-                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
+                attributes: ['uuid', 'name', 'about', 'email', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
             });
 
             if (venues.length > 0) {
@@ -112,7 +112,7 @@ class VenueController {
                     uuid: req.params.uuid,
                     deleted_at: null
                 },
-                attributes: ['uuid', 'name', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
+                attributes: ['uuid', 'name', 'about', 'email', 'address', 'contact_number', 'longitude', 'latitude', 'created_at', 'updated_at'],
                 include: [
                     {
                         model: membershipModel,

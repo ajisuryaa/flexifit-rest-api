@@ -12,6 +12,16 @@ const venueModel = db.define('venues', {
         allowNull: false,
         length: 255
     },
+    about: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        length: 255
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        length: 255
+    },
     address: {
         type: Sequelize.TEXT,
         allowNull: false,
