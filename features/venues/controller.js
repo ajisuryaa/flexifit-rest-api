@@ -15,6 +15,12 @@ class VenueController {
             if (!params.name) {
                 return [false, "Parameters name cannot be empty."];
             }
+            if (!params.about) {
+                return [false, "Parameters about cannot be empty."];
+            }
+            if (!params.email) {
+                return [false, "Parameters email cannot be empty."];
+            }
             if (!params.address) {
                 return [false, "Parameters address cannot be empty."];
             }
@@ -58,6 +64,8 @@ class VenueController {
                 uuid: uuid,
                 name: req.body.name,
                 address: req.body.address,
+                about: req.body.about,
+                email: req.body.email,
                 contact_number: req.body.contact_number,
                 latitude: req.body.latitude,
                 longitude: req.body.longitude
