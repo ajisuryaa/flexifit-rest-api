@@ -197,11 +197,9 @@ class AccountController {
                     message: messageValidate,
                 });
             }
-
-
             const account = await accountModel.findOne({
                 where: {
-                    uuid: req.body.id
+                    uuid: req.params.id
                 }
             });
 
@@ -211,7 +209,6 @@ class AccountController {
                     message: "User is not found",
                 });
             }
-
             let matchingPassword = await comparePassword(req.body.old_password, account.password);
             if (!matchingPassword) {
                 return res.status(200).json({
