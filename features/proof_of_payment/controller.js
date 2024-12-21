@@ -9,7 +9,7 @@ class ProofPaymentController {
     async updateStatusTransaction(req,res){
         try{
             let filePath = {
-                image: `/uploads/${req.file.filename}`,
+                image: req.file.filename,
             }
             let statusData = {
                 payment_approval: filePath.image,
