@@ -39,7 +39,7 @@ class AuthenticationController {
                     'user_type': user.level_account
                 },
                 process.env.ACCESS_TOKEN_KEY,
-                { expiresIn: '15m', }
+                { expiresIn: '1w', }
             );
             const refreshToken = jwt.sign(
                 {
@@ -49,11 +49,11 @@ class AuthenticationController {
                     'user_type': user.level_account
                 },
                 process.env.REFRESH_TOKEN_KEY,
-                { expiresIn: '1d', }
+                { expiresIn: '1w', }
             );
             res.cookie('refresh_token', refreshToken, {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000
+                maxAge: 160 * 60 * 60 * 1000
             });
 
             var dataUser;
@@ -161,7 +161,7 @@ class AuthenticationController {
                 },
                 process.env.ACCESS_TOKEN_KEY,
                 {
-                    expiresIn: '15m',
+                    expiresIn: '1w',
                 }
             );
             // Get the current time as a Unix timestamp (seconds since the epoch)
@@ -179,12 +179,12 @@ class AuthenticationController {
                     },
                     process.env.REFRESH_TOKEN_KEY,
                     {
-                        expiresIn: '1d',
+                        expiresIn: '1w',
                     }
                 );
                 res.cookie('refresh_token', newRefreshToken, {
                     httpOnly: true,
-                    maxAge: 24 * 60 * 60 * 1000
+                    maxAge: 160 * 60 * 60 * 1000
                 });
             }
 
