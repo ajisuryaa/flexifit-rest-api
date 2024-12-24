@@ -174,7 +174,7 @@ class TransactionController {
             if (transactions.length > 0) {
                 return res.status(200).json({
                     success: true,
-                    message: 'Succesfully get latest cart.',
+                    message: 'Succesfully get venue order.',
                     data: transactions
                 });
             }
