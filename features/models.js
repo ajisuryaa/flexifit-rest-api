@@ -7,6 +7,7 @@ const membershipModel = require('./memberships/model');
 const venueAccountModel = require('./venue_accounts/model');
 const transactionModel = require('./transactions/model');
 const cartModel = require('./cart/model');
+const imageVenueModel = require('./images_venue/model');
 
 venueModel.hasMany(
     membershipModel,
@@ -55,6 +56,22 @@ membershipModel.hasMany(cartModel, {
     foreignKey: 'id_transaction',
     as: 'item'
 });
+
+imageVenueModel.belongsTo(venueModel, {
+    foreignKey: 'venue',
+    targetKey: 'uuid',
+    as: 'm_venue',
+});
+
+venueModel.hasMany(
+    imageVenueModel,
+    {
+        foreignKey: 'venue',
+        as: 'gallery'
+    }
+);
+
+
 
 // membershipModel.belongsTo(cartModel, {
 //     foreignKey: 'id',
@@ -105,5 +122,6 @@ module.exports = {
     venueAccountModel,
     transactionModel,
     cartModel,
+    imageVenueModel,
     db
 };

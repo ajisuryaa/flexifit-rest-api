@@ -8,7 +8,7 @@ const membershipRoute = require('./memberships/route');
 const transactionRoute = require('./transactions/route');
 const cartRoute = require('./cart/route');
 const imageRoute = require('./images/route');
-
+const imageVenueRoute = require('./images_venue/route');
 const proofRoute = require('./proof_of_payment/route');
 
 globalRouter.use(
@@ -49,6 +49,11 @@ globalRouter.use(
 globalRouter.use(
     apiPath(process.env.API_VERSION, imageRoute.name), 
     imageRoute.router
+);
+
+globalRouter.use(
+    apiPath(process.env.API_VERSION, imageVenueRoute.name), 
+    imageVenueRoute.router
 );
 
 // const authenticationRoute = require('./authentications/route');
