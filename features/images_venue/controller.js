@@ -43,8 +43,9 @@ class ImageVenueController {
             await imageVenueModel.create(imageData);
 
             res.status(200).send({
+                success: true,
                 message: 'File uploaded successfully!',
-                filePath: `/uploads/${req.file.filename}`,
+                data: req.file.filename,
             });
         } catch (error) {
             return res.status(400).json({
