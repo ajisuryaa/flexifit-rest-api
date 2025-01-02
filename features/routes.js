@@ -10,6 +10,7 @@ const cartRoute = require('./cart/route');
 const imageRoute = require('./images/route');
 const imageVenueRoute = require('./images_venue/route');
 const proofRoute = require('./proof_of_payment/route');
+const scanRoute = require('./scan/route');
 
 globalRouter.use(
     apiPath(process.env.API_VERSION, accountRoute.name), 
@@ -54,6 +55,11 @@ globalRouter.use(
 globalRouter.use(
     apiPath(process.env.API_VERSION, imageVenueRoute.name), 
     imageVenueRoute.router
+);
+
+globalRouter.use(
+    apiPath(process.env.API_VERSION, scanRoute.name), 
+    scanRoute.router
 );
 
 // const authenticationRoute = require('./authentications/route');
