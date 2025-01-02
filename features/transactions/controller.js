@@ -2,7 +2,7 @@ const { transactionModel, cartModel, membershipModel } = require('../models');
 const { cartAttributes, membershipAttributes } = require('../list');
 const FileUploader = require('../uploder_file');
 const crypto = require('crypto');
-const { where } = require('sequelize');
+const { Op } = require("sequelize");
 const { stat } = require('fs');
 
 class TransactionController {
@@ -99,7 +99,10 @@ class TransactionController {
             if(status == 'all'){
                 query = {
                     id_account: req.params.account,
-                    deleted_at: null
+                    deleted_at: null,
+                    status: {
+                        [Op.ne]: 'picking', // Not equal to 'picking'
+                    }
                 };
             } else{
                 query = {
