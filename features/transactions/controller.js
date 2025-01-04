@@ -196,13 +196,21 @@ class TransactionController {
     statusTransactionList = ['picking', 'waiting approval', 'approval valid', 'on delivery', 'completed']; 
 
     getNextStatus(currentStatus) {
+       if(currentStatus == 'waiting approval'){
         const currentIndex = this.statusTransactionList.indexOf(currentStatus);
         if (currentIndex === -1) {
             throw new Error('Invalid status: The provided status is not in the list.');
         }
-        
+        // Return the next status if it exists, otherwise null
+        return this.statusTransactionList[4];
+       } else{
+        const currentIndex = this.statusTransactionList.indexOf(currentStatus);
+        if (currentIndex === -1) {
+            throw new Error('Invalid status: The provided status is not in the list.');
+        }
         // Return the next status if it exists, otherwise null
         return this.statusTransactionList[currentIndex + 1] || null;
+       }
     }
 
     async checkoutTransaction(req,res){
@@ -233,7 +241,7 @@ class TransactionController {
     async updateStatusTransaction(req,res){
         try{
             let statusData = {
-                status: "completed",
+                status: this.getNextStatus(req.body.status),
                 updated_at: new Date()
             }
             await transactionModel.update(statusData, {
