@@ -117,7 +117,35 @@ class CartController {
           }
     }
 
+    async removeItem(req, res) {
+        try {
+            // Remove the membership based on the provided ID
+            const result = await cartModel.destroy({
+                where: {
+                    id_transaction: req.params.transaction,
+                    id_item: req.params.item
+                }
+            });
     
+            // Check if the item was deleted
+            if (result) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Delete item success.',
+                });
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    message: 'item not found.',
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 const cartController = new CartController();
