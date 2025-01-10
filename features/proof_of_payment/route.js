@@ -5,7 +5,7 @@ const token = require('../../tools/token');
 const FileUploader = require("../../tools/upload_image");
 const uploader = new FileUploader("uploads/", ["image/jpeg", "image/png"], 2 * 1024 * 1024); // Max size 2MB
 
-router.put('/:transaction', uploader.uploadSingle("image"), token.jwtHandler, (req, res) => proofPaymentController.updateStatusTransaction(req, res));
+router.post('/:transaction', uploader.uploadSingle("image"), token.jwtHandler, (req, res) => proofPaymentController.updateStatusTransaction(req, res));
 
 module.exports = {
     "name": proofPaymentController.prefix,
