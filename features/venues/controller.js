@@ -1,6 +1,9 @@
-const { venueModel, membershipModel } = require('../models');
+const { venueModel, membershipModel, accountModel } = require('../models');
+const accountController = require('../accounts/controller');
 const { v4: uuidv4 } = require('uuid');
+const { hashPassword } = require('../../tools/hash');
 const { membershipAttributes, venueAttributes } = require('../list');
+const venueAccountController = require('../venue_accounts/controller');
 
 class VenueController {
     constructor() {
@@ -52,25 +55,47 @@ class VenueController {
     }
     async createVenue(req, res) {
         try{
-            let [statusValidate, messageValidate] = this.validateParams(req.body, "create");
-            if (statusValidate == false) {
+            let [statusValidate1, messageValidate1] = this.validateParams(req.body.venue, "create");
+            let [statusValidate2, messageValidate2] = accountController.validateParams(req.body.account, "create");
+            if (statusValidate1 == false) {
                 return res.status(200).json({
                     success: false,
-                    message: messageValidate,
+                    message: messageValidate1,
+                });
+            } else if(statusValidate2 == false){
+                return res.status(200).json({
+                    success: false,
+                    message: messageValidate2,
                 });
             }
-            let uuid = uuidv4();
+            let uuidVenue = uuidv4();
             let venueData = {
-                uuid: uuid,
-                name: req.body.name,
-                address: req.body.address,
-                about: req.body.about,
-                email: req.body.email,
-                contact_number: req.body.contact_number,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude
+                uuid: uuidVenue,
+                name: req.body.venue.name,
+                address: req.body.venue.address,
+                about: req.body.venue.about,
+                email: req.body.venue.email,
+                contact_number: req.body.venue.contact_number,
+                latitude: req.body.venue.latitude,
+                longitude: req.body.venue.longitude
+            }
+            let accountId = uuidv4();
+            let userData = {
+                uuid: accountId,
+                email: req.body.account.email,
+                name: req.body.account.name,
+                password: await hashPassword(req.body.account.password),
+                phone: req.body.account.phone,
+                level_account: req.body.account.type
+            }
+            let venueAccountData = {
+                id_account: accountId,
+                id_venue: uuidVenue,
+                level_account: req.body.account.level_account
             }
             await venueModel.create(venueData);
+            await accountModel.create(userData);
+            await venueAccountController.createAccountVenue(venueAccountData);
             return res.status(200).json({
                 success: true,
                 message: 'Add new venue success',

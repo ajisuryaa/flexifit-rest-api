@@ -129,7 +129,7 @@ class AccountController {
                     id_venue: req.body.venue,
                     level_account: req.body.level_account
                 }
-                accountModel.create(userData);
+                await accountModel.create(userData);
                 await venueAccountController.createAccountVenue(venueAccountData);
             } else{
                 userData = {
