@@ -25,19 +25,19 @@ class AccountController {
                 return [false, "Parameters name, email, password and type be empty."];
             }
             if (!params.name) {
-                return [false, "Parameters name cannot be empty."];
+                return [false, "Parameters name account cannot be empty."];
             }
             if (!params.password) {
-                return [false, "Parameters password cannot be empty."];
+                return [false, "Parameters password account cannot be empty."];
             }
             if (!params.email) {
-                return [false, "Parameters email cannot be empty."];
+                return [false, "Parameters email account cannot be empty."];
             }
             if (!params.type) {
                 return [false, "Parameters type account cannot be empty."];
             }
             if (!params.phone) {
-                return [false, "Parameters phone cannot be empty."];
+                return [false, "Parameters phone account cannot be empty."];
             }
             if(params.level_account == userTypeEnum.ADMINVENUE){
                 if (!params.venue_id) {

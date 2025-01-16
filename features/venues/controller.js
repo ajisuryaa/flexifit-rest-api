@@ -16,25 +16,25 @@ class VenueController {
                 return [false, "Parameters datas cannot be empty."];
             }
             if (!params.name) {
-                return [false, "Parameters name cannot be empty."];
+                return [false, "Parameters name venue cannot be empty."];
             }
             if (!params.about) {
-                return [false, "Parameters about cannot be empty."];
+                return [false, "Parameters about venue cannot be empty."];
             }
             if (!params.email) {
-                return [false, "Parameters email cannot be empty."];
+                return [false, "Parameters email venue cannot be empty."];
             }
             if (!params.address) {
-                return [false, "Parameters address cannot be empty."];
+                return [false, "Parameters address venue cannot be empty."];
             }
             if (!params.contact_number) {
-                return [false, "Parameters contact number cannot be empty."];
+                return [false, "Parameters contact number venue cannot be empty."];
             }
             if (typeof params.latitude !== 'number' || !Number.isFinite(params.latitude)) {
-                return [false, "Parameters latitude cannot be empty."];
+                return [false, "Parameters latitude venue cannot be empty."];
             }
             if (typeof params.longitude !== 'number' || !Number.isFinite(params.longitude)) {
-                return [false, "Parameters longitude cannot be empty."];
+                return [false, "Parameters longitude venue cannot be empty."];
             }
         }
         if (type == 'edit') {
