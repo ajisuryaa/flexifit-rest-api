@@ -161,10 +161,12 @@ class TransactionController {
                         model: cartModel,
                         as: 'carts',
                         attributes: ['quantity', 'price', 'total_price', 'type'],
+                        required: true, // Ensures only records with associated carts are included
                         include: [
                             {
                                 model: membershipModel,
                                 as: 'product_info',
+                                required: true, // Ensures only associated membership records are included
                                 attributes: membershipAttributes,
                                 where:  {
                                     venue_id: req.params.venue,
@@ -174,6 +176,7 @@ class TransactionController {
                     },
                 ],
             });
+            console.log(transactions.length);
             if (transactions.length > 0) {
                 return res.status(200).json({
                     success: true,
