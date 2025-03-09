@@ -113,6 +113,14 @@ class AccountController {
                     message: messageValidate,
                 });
             }
+            // Check if email is already registered
+            const existingUser = await accountModel.findOne({ email: req.body.email });
+            if (existingUser) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Email is already registered.',
+                });
+            }
             let codeFormat = uuidv4();
             let userData;
             if(req.body.type == userTypeEnum.ADMINVENUE){
